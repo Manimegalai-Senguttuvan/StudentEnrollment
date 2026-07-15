@@ -1,0 +1,22 @@
+# Node
+**/node_modules/
+npm-debug.log*
+
+# React build
+**/build/
+**/dist/
+
+# .NET
+**/bin/
+**/obj/
+
+# Visual Studio
+.vs/
+
+# Environment files
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
