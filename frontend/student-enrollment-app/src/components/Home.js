@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Alert, Spinner } from 'react-bootstrap';
+import {  Row, Col, Alert, Spinner } from 'react-bootstrap';
 import { studentApi, courseApi, enrollmentApi } from '../services/api';
 
 function Home() {

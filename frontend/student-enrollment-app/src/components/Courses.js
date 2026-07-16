@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Table, Button, Form, Modal, Row, Col, Alert, Badge } from 'react-bootstrap';
 import { courseApi, enrollmentApi } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -13,23 +13,26 @@ function Courses() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  const load = async () => {
-    try {
-      setError(null);
-      const cRes = await courseApi.getAll();
-      setCourses(cRes.data);
+  const load = useCallback(async () => {
+  try {
+    setError(null);
 
-      if (!isAdmin()) {
-        const eRes = await enrollmentApi.getAll();
-        setMyEnrollments(eRes.data);
-      }
-    } catch (err) {
-      setError('Failed to load courses. Ensure the backend is active.');
-      console.error(err);
+    const cRes = await courseApi.getAll();
+    setCourses(cRes.data);
+
+    if (!isAdmin()) {
+      const eRes = await enrollmentApi.getAll();
+      setMyEnrollments(eRes.data);
     }
-  };
+  } catch (err) {
+    setError("Failed to load courses. Ensure the backend is active.");
+    console.error(err);
+  }
+}, [isAdmin]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+  load();
+}, [load]);
 
   const openNew = () => {
     setEditing(null);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Table, Button, Form, Modal, Row, Col, Alert, Badge } from 'react-bootstrap';
 import { enrollmentApi, studentApi, courseApi } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -12,34 +12,38 @@ function Enrollments() {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ studentId: '', courseId: '', grade: '', status: 'Active' });
   const [error, setError] = useState(null);
+const load = useCallback(async () => {
+  try {
+    setError(null);
 
-  const load = async () => {
-    try {
-      setError(null);
-      if (isAdmin()) {
-        const [eRes, sRes, cRes] = await Promise.all([
-          enrollmentApi.getAll(),
-          studentApi.getAll(),
-          courseApi.getAll()
-        ]);
-        setEnrollments(eRes.data);
-        setStudents(sRes.data);
-        setCourses(cRes.data);
-      } else {
-        const [eRes, cRes] = await Promise.all([
-          enrollmentApi.getAll(),
-          courseApi.getAll()
-        ]);
-        setEnrollments(eRes.data);
-        setCourses(cRes.data);
-      }
-    } catch (err) {
-      setError('Failed to load enrollments. Ensure the backend is active.');
-      console.error(err);
+    if (isAdmin()) {
+      const [eRes, sRes, cRes] = await Promise.all([
+        enrollmentApi.getAll(),
+        studentApi.getAll(),
+        courseApi.getAll()
+      ]);
+
+      setEnrollments(eRes.data);
+      setStudents(sRes.data);
+      setCourses(cRes.data);
+    } else {
+      const [eRes, cRes] = await Promise.all([
+        enrollmentApi.getAll(),
+        courseApi.getAll()
+      ]);
+
+      setEnrollments(eRes.data);
+      setCourses(cRes.data);
     }
-  };
+  } catch (err) {
+    setError("Failed to load enrollments. Ensure the backend is active.");
+    console.error(err);
+  }
+}, [isAdmin]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+  load();
+}, [load]);
 
   const openNew = () => {
     setEditing(null);
