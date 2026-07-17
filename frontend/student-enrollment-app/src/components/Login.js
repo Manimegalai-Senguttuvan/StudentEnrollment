@@ -67,7 +67,7 @@ function Login() {
           <p className="landing-subtitle text-muted mb-4">
             Join a world-class academic community on the cutting edge of technology and innovation.
           </p>
-          <div className="d-flex align-items-center gap-3">
+          <div className="d-flex flex-column flex-md-row align-items-center gap-3">
             <Button 
               className="btn-primary-custom landing-cta-btn-new" 
               onClick={() => setShowLanding(false)}
